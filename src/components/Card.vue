@@ -12,7 +12,7 @@
         <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"></span>
       </div>
       <form action="" @submit.prevent="fetchApi">
-        <input type="text" @v-model="city" placeholder="enter city name">
+        <input type="text" v-model="city" placeholder="enter city name">
         <input type="submit" value="Send">
       </form>
       <div class="show-info" v-if="!isLoading">
