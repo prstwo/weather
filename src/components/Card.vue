@@ -12,9 +12,13 @@
         <div class="pt-4 pb-2">
           <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"></span>
         </div>
-        <form action="" @submit.prevent="fetchApi" class="flex">
-          <input type="text" v-model="city" placeholder="enter city name" class="w-full  focus:ring-0 p-2 rounded-l border border-r-0" required>
-          <input type="submit" value="Send" class="text-sm border border-2 rounded-r px-4 py-2 bg-gray-300 whitespace-no-wrap">
+        <form action="" @submit.prevent="fetchApi" >
+          <div class="flex">
+            <input type="text" v-model="city" placeholder="enter city name" class="w-full  focus:ring-0 p-2 rounded-l border border-r-0" required>
+            <input type="submit" value="Send" class="text-sm border border-2 rounded-r px-4 py-2 bg-gray-300 whitespace-no-wrap">
+          </div>
+          <h3 class="text-lg text-2xl font-bold py-2">Or</h3>
+          <Map/>
         </form>
         <div class="pt-4">
           <div class="show-info" v-if="!isLoading&&!info.isEmpty" >
@@ -42,14 +46,18 @@
 </template>
 <script>
 import axios from 'axios';
+import Map from './Map'
+/*end of imports*/
  const key ='ac89a533b6e0b6c6f66719241b35ea45';
  export default {
    name:"Card",
+   components:{Map},
    data(){
      return{
        city:null,
        info:{city: ['City',''], desc:  ['Description',''], wind: ['Wind Speed',''], temp: ['Tempreture',''], isEmpty:true },
-       isLoading:false
+       isLoading:false,
+
      }
    },
    methods:{
@@ -65,11 +73,20 @@ import axios from 'axios';
            }).then(({data})=>{
               this.info.isEmpty = false;
              this.info.city[1] = data.name;
-             this.info.temp[1] = data.main.temp;
+             this.info.temp[1] = data.main.temp + '°C';
              this.info.desc[1] = data.weather[0].description ;
              this.info.wind[1] = data.wind.speed;
              this.isLoading=false;
        });
+     },
+     fetchMapCoord(lat,lon){
+       axios.get('https://api.openweathermap.org/data/2.5/weather?', {
+         params: {
+           appid: key,
+           lat:lat,
+           lon:lon
+         }
+       })
      }
    }
  }
