@@ -1,26 +1,41 @@
 <template>
-  <div>
-    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+  <div class="flex flex-col justify-center align-center items-center h-full">
+    <div class="max-w-sm rounded overflow-hidden shadow-lg  m-1">
       <img class="w-full" src="weather.jpg" alt="Sunset in the mountains">
-      <div class="px-6 py-4">
-        <div class="font-bold text-xl mb-2">The Coldest Sunset</div>
-        <p class="text-gray-700 text-base">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-        </p>
-      </div>
-      <div class="px-6 pt-4 pb-2">
-        <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"></span>
-      </div>
-      <form action="" @submit.prevent="fetchApi">
-        <input type="text" v-model="city" placeholder="enter city name">
-        <input type="submit" value="Send">
-      </form>
-      <div class="show-info" v-if="!isLoading">
-        <ul>
-          <li>
+      <div class="px-6 py-6">
+        <div class="pb-4">
+          <div class="font-bold text-xl mb-2">Weather Forecast</div>
+          <p class="text-gray-700 text-base">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
+          </p>
+        </div>
+        <div class="pt-4 pb-2">
+          <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"></span>
+        </div>
+        <form action="" @submit.prevent="fetchApi" class="flex">
+          <input type="text" v-model="city" placeholder="enter city name" class="w-full  focus:ring-0 p-2 rounded-l border border-r-0" required>
+          <input type="submit" value="Send" class="text-sm border border-2 rounded-r px-4 py-2 bg-gray-300 whitespace-no-wrap">
+        </form>
+        <div class="pt-4">
+          <div class="show-info" v-if="!isLoading&&!info.isEmpty" >
+            <ul>
+              <template v-for="(result, index) in info" :key="index">
+                <li class="mb-2">
+                  <span class="pr-1">{{result[0]}}:</span>
+                  <span>
+                    {{result[1]}}
+                  </span>
+                </li>
+              </template>
 
-          </li>
-        </ul>
+            </ul>
+          </div>
+          <div v-else-if="isLoading">
+            <p>
+              Getting info...
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -33,7 +48,7 @@ import axios from 'axios';
    data(){
      return{
        city:null,
-       info:{},
+       info:{city: ['City',''], desc:  ['Description',''], wind: ['Wind Speed',''], temp: ['Tempreture',''], isEmpty:true },
        isLoading:false
      }
    },
@@ -47,7 +62,14 @@ import axios from 'axios';
                appid: key,
                units:'metric'
              }
-           });
+           }).then(({data})=>{
+              this.info.isEmpty = false;
+             this.info.city[1] = data.name;
+             this.info.temp[1] = data.main.temp;
+             this.info.desc[1] = data.weather[0].description ;
+             this.info.wind[1] = data.wind.speed;
+             this.isLoading=false;
+       });
      }
    }
  }
