@@ -36,17 +36,20 @@
           </div>
         </div>
       </div>
+      <Footer />
     </div>
+
   </div>
 </template>
 <script>
 import axios from 'axios';
 import Map from './Map'
+import Footer from "./Footer";
 /*end of imports*/
  const key ='ac89a533b6e0b6c6f66719241b35ea45';
  export default {
    name:"Card",
-   components:{Map},
+   components:{Footer, Map},
    data(){
      return{
        city:null,
